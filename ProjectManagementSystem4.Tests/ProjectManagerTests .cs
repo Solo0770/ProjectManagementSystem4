@@ -76,6 +76,32 @@ namespace ProjectManagementSystem4.Tests
             Assert.Contains(task2, tasks);
         }
 
+        [Fact]
+        public void Should_Throw_Exception_For_Invalid_Status()
+        {
+            // Arrange
+            var teamMember = new TeamMember("Nick Gurr", 1);
+
+            // Act та Assert
+            Assert.Throws<ArgumentException>(() => new Task("Task 1", teamMember, "InvalidStatus"));
+        }
+
+        [Fact]
+        public void Should_Throw_Exception_For_Duplicate_Task_Name()
+        {
+            // Arrange
+            var projectManager = new ProjectManager();
+            var project = new Project("Project A", DateTime.Now, DateTime.Now.AddDays(30));
+            var teamMember = new TeamMember("Nick Gurr", 1);
+            var task = new Task("Task 1", teamMember, "Заплановано");
+
+            projectManager.AddProject(project);
+            projectManager.AddTask("Project A", task);
+
+            // Act та Assert
+            Assert.Throws<ArgumentException>(() => projectManager.AddTask("Project A", task));
+        }
+
     }
 }
 
