@@ -13,7 +13,14 @@ namespace ProjectManagementSystem4
 
         public TeamMember(string name, int memberId)
         {
-       
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException("Name cannot be empty.");
+            if (memberId <= 0)
+                throw new ArgumentException("Member ID must be a positive number and explicitly provided.");
+
+            Name = name;
+            MemberId = memberId;
+
         }
     }
 
