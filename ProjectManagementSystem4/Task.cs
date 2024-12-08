@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProjectManagementSystem4;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,10 +18,28 @@ namespace ProjectManagementSystem4
 
         public Task(string taskName, TeamMember assignedTo, string status)
         {
-         
+            if (string.IsNullOrWhiteSpace(taskName))
+                throw new ArgumentException("Task name cannot be empty.");
+
+            ValidateStatus(status);
+
+            TaskName = taskName;
+            AssignedTo = assignedTo ?? throw new ArgumentNullException(nameof(assignedTo), "Assigned team member cannot be null.");
+            Status = status;
         }
 
-       
+        private static void ValidateStatus(string status)
+        {
+            if (!Array.Exists(AllowedStatuses, s => s == status))
+                throw new ArgumentException($"Invalid status. Allowed statuses are: {string.Join(", ", AllowedStatuses)}");
+        }
+
+
+        public void UpdateStatus(string newStatus)
+        {
+            ValidateStatus(newStatus);
+            Status = newStatus;
+        }
 
     }
 }
