@@ -42,9 +42,21 @@ namespace ProjectManagementSystem4
             return projects[projectName].Tasks;
         }
 
-        public void UpdateTaskStatus(string v1, string v2, string v3)
+        public void UpdateTaskStatus(string projectName, string taskName, string newStatus)
         {
-            throw new NotImplementedException();
+            if (!projects.ContainsKey(projectName))
+                throw new KeyNotFoundException($"Project '{projectName}' not found.");
+
+            var project = projects[projectName];
+            var task = project.Tasks.Find(t => t.TaskName == taskName);
+
+            if (task == null)
+                throw new ArgumentException($"Task '{taskName}' not found in the project '{projectName}'.");
+
+            if (!Array.Exists(Task.AllowedStatuses, s => s == newStatus))
+                throw new ArgumentException($"Invalid status. Allowed statuses are: {string.Join(", ", Task.AllowedStatuses)}");
+
+            task.UpdateStatus(newStatus);
         }
     }
 }
