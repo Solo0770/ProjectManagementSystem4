@@ -15,10 +15,24 @@ namespace ProjectManagementSystem4
 
         public Project(string name, DateTime startDate, DateTime endDate)
         {
-           
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException("Project name cannot be empty.");
+            if (endDate < startDate)
+                throw new ArgumentException("End date cannot be earlier than start date.");
+
+            Name = name;
+            StartDate = startDate;
+            EndDate = endDate;
+            Tasks = new List<Task>();
         }
 
-       
+        public void AddTask(Task task)
+        {
+            if (Tasks.Exists(t => t.TaskName == task.TaskName))
+                throw new ArgumentException("Task with the same name already exists in the project.");
+            Tasks.Add(task);
+        }
+
     }
 }
 
