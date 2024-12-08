@@ -28,7 +28,27 @@ namespace ProjectManagementSystem4.Tests
             Assert.Contains(task, tasks);
         }
 
+        [Fact]
+        public void Should_Update_Task_Status()
+        {
+            // Arrange
+            var projectManager = new ProjectManager();
+            var project = new Project("Project A", DateTime.Now, DateTime.Now.AddDays(30));
+            var teamMember = new TeamMember("Nick Gurr", 1);
+            var task = new Task("Implement some feature", teamMember, "Заплановано");
 
+            projectManager.AddProject(project);
+            projectManager.AddTask("Project A", task);
+
+            // Act
+            projectManager.UpdateTaskStatus("Project A", "Implement some feature", "Виконується");
+
+            // Assert
+            var tasks = projectManager.GetTasks("Project A");
+            var updatedTask = tasks.Find(t => t.TaskName == "Implement some feature");
+            Assert.NotNull(updatedTask);
+            Assert.Equal("Виконується", updatedTask.Status);
+        }
 
     }
 }

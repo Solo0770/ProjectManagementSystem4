@@ -41,6 +41,11 @@ namespace ProjectManagementSystem4
                 throw new KeyNotFoundException("Project not found.");
             return projects[projectName].Tasks;
         }
+
+        public void UpdateTaskStatus(string v1, string v2, string v3)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
 
