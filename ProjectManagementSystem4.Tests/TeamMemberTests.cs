@@ -10,7 +10,7 @@ namespace ProjectManagementSystem4.Tests
     public class TeamMemberTests
     {
         [Fact]
-        public void Should_Create_TeamMember_With_Valid_Data()
+        public void CreateTeamMember_ValidData_ReturnsCreatedTeamMember()
         {
             // Arrange
             string name = "Nick Gurr";
@@ -25,25 +25,31 @@ namespace ProjectManagementSystem4.Tests
         }
 
         [Fact]
-        public void Should_Throw_Exception_For_Invalid_Or_Missing_MemberId()
+        public void CreateTeamMember_InvalidOrMissingMemberId_ThrowsArgumentException()
         {
             // Arrange
             string name = "Nick Gurr";
 
             // Act та Assert
-            Assert.Throws<ArgumentException>(() => new TeamMember(name, 0));  // ID = 0
-            Assert.Throws<ArgumentException>(() => new TeamMember(name, -1)); // ID < 0
+            var ex1 = Assert.Throws<ArgumentException>(() => new TeamMember(name, 0));
+            Assert.Equal("Member ID must be a positive number and explicitly provided.", ex1.Message);
+
+            var ex2 = Assert.Throws<ArgumentException>(() => new TeamMember(name, -1));
+            Assert.Equal("Member ID must be a positive number and explicitly provided.", ex2.Message);
         }
 
         [Fact]
-        public void Should_Throw_Exception_For_Empty_Name()
+        public void CreateTeamMember_EmptyName_ThrowsArgumentException()
         {
             // Arrange
             int memberId = 1;
 
             // Act та Assert
-            Assert.Throws<ArgumentException>(() => new TeamMember("", memberId)); // пусте 
-            Assert.Throws<ArgumentException>(() => new TeamMember(null, memberId)); // null
+            var ex1 = Assert.Throws<ArgumentException>(() => new TeamMember("", memberId));
+            Assert.Equal("Name cannot be empty.", ex1.Message);
+
+            var ex2 = Assert.Throws<ArgumentException>(() => new TeamMember(null, memberId));
+            Assert.Equal("Name cannot be empty.", ex2.Message);
         }
     }
 }

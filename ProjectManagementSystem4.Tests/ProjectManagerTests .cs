@@ -10,7 +10,7 @@ namespace ProjectManagementSystem4.Tests
     public class ProjectManagerTests
     {
         [Fact]
-        public void Should_Add_Task_To_Project()
+        public void AddTaskToProject_ValidData_ReturnsTaskAddedToProject()
         {
             // Arrange
             var projectManager = new ProjectManager();
@@ -29,7 +29,64 @@ namespace ProjectManagementSystem4.Tests
         }
 
         [Fact]
-        public void Should_Update_Task_Status()
+        public void AddProject_DuplicateProjectName_ThrowsArgumentException()
+        {
+            // Arrange
+            var projectManager = new ProjectManager();
+            var project = new Project("Project A", DateTime.Now, DateTime.Now.AddDays(30));
+
+            projectManager.AddProject(project);
+
+            // Act та Assert
+            var ex = Assert.Throws<ArgumentException>(() => projectManager.AddProject(project));
+            Assert.Equal("Project with the same name already exists.", ex.Message);
+        }
+
+        [Fact]
+        public void AddTaskToNonExistentProject_ThrowsKeyNotFoundException()
+        {
+            // Arrange
+            var projectManager = new ProjectManager();
+            var teamMember = new TeamMember("Nick Gurr", 1);
+            var task = new Task("Implement some feature", teamMember, "Заплановано");
+
+            // Act та Assert
+            var ex = Assert.Throws<KeyNotFoundException>(() => projectManager.AddTask("Nonexistent Project", task));
+            Assert.Equal("Project 'Nonexistent Project' not found.", ex.Message);
+        }
+
+        [Fact]
+        public void AddTask_NullTask_ThrowsArgumentNullException()
+        {
+            // Arrange
+            var projectManager = new ProjectManager();
+            var project = new Project("Project A", DateTime.Now, DateTime.Now.AddDays(30));
+
+            projectManager.AddProject(project);
+
+            // Act та Assert
+            var ex = Assert.Throws<ArgumentNullException>(() => projectManager.AddTask("Project A", null));
+            Assert.Equal("Task cannot be null. (Parameter 'task')", ex.Message);
+        }
+
+        [Fact]
+        public void AddTask_EmptyTaskName_ThrowsArgumentException()
+        {
+            // Arrange
+            var projectManager = new ProjectManager();
+            var project = new Project("Project A", DateTime.Now, DateTime.Now.AddDays(30));
+            var teamMember = new TeamMember("Nick Gurr", 1);
+            var task = new Task("Valid Task", teamMember, "Заплановано");
+
+            projectManager.AddProject(project);
+
+            // Act та Assert
+            var ex = Assert.Throws<ArgumentException>(() => projectManager.AddTask("Project A", new Task("", teamMember, "Заплановано")));
+            Assert.Equal("Task name cannot be empty or whitespace.", ex.Message);
+        }
+
+        [Fact]
+        public void UpdateTaskStatus_ValidData_ReturnsUpdatedStatus()
         {
             // Arrange
             var projectManager = new ProjectManager();
@@ -51,7 +108,7 @@ namespace ProjectManagementSystem4.Tests
         }
 
         [Fact]
-        public void Should_Return_All_Tasks_For_Project()
+        public void GetTasksFromProject_ValidProject_ReturnsAllTasks()
         {
             // Arrange
             var projectManager = new ProjectManager();
@@ -77,17 +134,7 @@ namespace ProjectManagementSystem4.Tests
         }
 
         [Fact]
-        public void Should_Throw_Exception_For_Invalid_Status()
-        {
-            // Arrange
-            var teamMember = new TeamMember("Nick Gurr", 1);
-
-            // Act та Assert
-            Assert.Throws<ArgumentException>(() => new Task("Task 1", teamMember, "InvalidStatus"));
-        }
-
-        [Fact]
-        public void Should_Throw_Exception_For_Duplicate_Task_Name()
+        public void AddTaskToProject_DuplicateTaskName_ThrowsArgumentException()
         {
             // Arrange
             var projectManager = new ProjectManager();
@@ -99,7 +146,8 @@ namespace ProjectManagementSystem4.Tests
             projectManager.AddTask("Project A", task);
 
             // Act та Assert
-            Assert.Throws<ArgumentException>(() => projectManager.AddTask("Project A", task));
+            var ex = Assert.Throws<ArgumentException>(() => projectManager.AddTask("Project A", task));
+            Assert.Equal("Task with the name 'Task 1' already exists in the project 'Project A'.", ex.Message);
         }
 
     }

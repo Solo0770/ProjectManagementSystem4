@@ -11,7 +11,7 @@ namespace ProjectManagementSystem4.Tests
     public class TaskTests
     {
         [Fact]
-        public void Task_Should_Be_Created_With_Valid_Data()
+        public void CreateTask_ValidData_ReturnsCreatedTask()
         {
             // Arrange
             string taskName = "Implement some feature";
@@ -28,7 +28,7 @@ namespace ProjectManagementSystem4.Tests
         }
 
         [Fact]
-        public void Task_Should_Throw_Exception_For_Invalid_Status()
+        public void CreateTask_InvalidStatus_ThrowsArgumentException()
         {
             // Arrange
             string taskName = "Task 1";
@@ -41,14 +41,17 @@ namespace ProjectManagementSystem4.Tests
         }
 
         [Fact]
-        public void Task_Should_Throw_Exception_For_Empty_Name_Or_Null_AssignedTo()
+        public void CreateTask_EmptyNameOrNullAssignedTo_ThrowsException()
         {
             // Arrange
             TeamMember assignedTo = new TeamMember("Nick Gurr", 1);
 
             // Act та Assert
-            Assert.Throws<ArgumentException>(() => new Task("", assignedTo, "Заплановано"));
-            Assert.Throws<ArgumentNullException>(() => new Task("Valid Task", null, "Заплановано"));
+            var ex1 = Assert.Throws<ArgumentException>(() => new Task("", assignedTo, "Заплановано"));
+            Assert.Equal("Task name cannot be empty or whitespace.", ex1.Message);
+
+            var ex2 = Assert.Throws<ArgumentNullException>(() => new Task("Valid Task", null, "Заплановано"));
+            Assert.Equal("Assigned team member cannot be null. (Parameter 'assignedTo')", ex2.Message);
         }
     }
 

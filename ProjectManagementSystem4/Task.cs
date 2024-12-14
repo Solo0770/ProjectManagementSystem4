@@ -19,7 +19,7 @@ namespace ProjectManagementSystem4
         public Task(string taskName, TeamMember assignedTo, string status)
         {
             if (string.IsNullOrWhiteSpace(taskName))
-                throw new ArgumentException("Task name cannot be empty.");
+                throw new ArgumentException("Task name cannot be empty or whitespace.");
 
             ValidateStatus(status);
 
